@@ -1,11 +1,83 @@
 {% extends "layout.html" %}
 {% block body %}
-  <h1>Hello</h1>
+  <h1>Welcome to My Subscription Notification Endpoint</h1>
 
-  <p>my posts</p>
+  <p>my subscription notifications ( hit refresh to update )</p>
   <ol>
     {% for i in posts %}
-    <ul>{{i.id}}) timestamp = {{i.timestamp}}, body = {{i.body.foo}}</ul>
+
+            <ul>{{ i.id }}) timestamp = {{ i.timestamp }}, notification = {{ i.type }}
+               {% if i.type == 'event-notification'%}
+                event ids = {{ i.event_ids }}
+               {% endif %}
+             </ul>
+
     {% endfor %}
-  <ol>
+  </ol>
+
+<hr />
+
+
+<h3 id="After-Getting-Subscription-Notication" data-id="After-Getting-Subscription-Notication" style=""><span>After Getting Subscription Notication</span></h3>
+
+
+<p><span>After you receive a subscription notification, you can fetch all the data you need to determine if any action on your part is needed using the FHIR RESTful API.  Below is a table which represents a graph of resource you may want to retreive and inspect:</span></p>
+
+<table border=1>
+<thead>
+<tr>
+<th><span>Source Profile</span></th>
+<th><span>Path</span></th>
+<th><span>Target Profile</span></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span>US Core Encounter Profile</span></td>
+<td><span>self</span></td>
+<td><span>US Core Encounter Profile</span></td>
+</tr>
+<tr>
+<td><span>US Core Encounter Profile</span></td>
+<td><span>Encounter.location</span></td>
+<td><span>US Core Location Profile</span></td>
+</tr>
+<tr>
+<td><span>US Core Encounter Profile</span></td>
+<td><span>Encounter.participant.individual</span></td>
+<td><span>US Core Practitioner Profile</span></td>
+</tr>
+<tr>
+<td><span>US Core Encounter Profile</span></td>
+<td><span>Encounter.subject</span></td>
+<td><span>US Core Patient Profile</span></td>
+</tr>
+<tr>
+<td><span>US Core Coverage Profile</span></td>
+<td><span>Coverage.beneficary</span></td>
+<td><span>US Core Patient Profile</span></td>
+</tr>
+<tr>
+<td><span>US Core Condition Profile</span></td>
+<td><span>Condition.encounter</span></td>
+<td><span>US Core Encounter Profile</span></td>
+</tr>
+</tbody>
+</table><p><span>This data could be fetched using this sequence of RESTful queries:</span></p>
+
+<ol>
+<li>
+<p><span>Using the </span><a href="http://hl7.org/fhir/search.html#include" target="_blank" rel="noopener"><span>_include</span></a><span> parameter to fetch the Encounter, Patient, Practitioner, and Location.</span><br>
+<code>GET /Encounter/_id=[id]&amp;_include=Encounter:patient&amp;_include=Encounter:practitioner&amp;_include=Encounter:location</code></p>
+</li>
+<li>
+<p><span>Fetch the Condition data using the following query:</span><br>
+<code>GET /Condition?patient=[patient id]&amp;encounter=[encounter id]</code></p>
+</li>
+<li>
+<p><span>Fetch the Coverage data using the following query:</span><br>
+<code>GET /Coverage?patient=[patient id]</code></p>
+</li>
+</ol>
+
 {% endblock %}
