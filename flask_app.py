@@ -4,7 +4,6 @@
 from flask import Flask, request, Response, render_template, session
 import os
 from flask_sqlalchemy import SQLAlchemy
-#from flask_migrate import Migrate
 from logging.config import dictConfig
 from datetime import datetime
 from json import dumps, loads
