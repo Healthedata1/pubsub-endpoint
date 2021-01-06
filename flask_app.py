@@ -27,11 +27,15 @@ dictConfig({
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 app = Flask(__name__)
+app.config["DEBUG"] = True
 app.secret_key = 'my_secret_key'
 
 # Configure the SQLAlchemy part of the app instance
 app.config['SQLALCHEMY_ECHO'] = True
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.join(basedir, 'post.db')
+try: # for local build
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:////' + os.path.join(basedir, 'post.db')
+except:  # for pythonanywhere
+    app.config['SQLALCHEMY_DATABASE_URI'] = '/home/healthedatainc2/mysite/post.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
