@@ -1,0 +1,11 @@
+{% extends "layout.html" %}
+{% block body %}
+  <h1>Hello</h1>
+
+  <p>my posts</p>
+  <ol>
+    {% for i in posts %}
+    <ul>{{i.id}}) timestamp = {{i.timestamp}}, body = {{i.body.foo}}</ul>
+    {% endfor %}
+  <ol>
+{% endblock %}
