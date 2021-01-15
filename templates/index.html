@@ -3,6 +3,7 @@
   <h1>Welcome to My Subscription Notification Endpoint</h1>
 
   <p>my subscription notifications ( hit refresh to update )</p>
+  <a href=>REFRESH</a>
   <ol>
     {% for i in posts %}
 
@@ -70,14 +71,80 @@
 <p><span>Using the </span><a href="http://hl7.org/fhir/search.html#include" target="_blank" rel="noopener"><span>_include</span></a><span> parameter to fetch the Encounter, Patient, Practitioner, and Location.</span><br>
 <code>GET /Encounter/_id=[id]&amp;_include=Encounter:patient&amp;_include=Encounter:practitioner&amp;_include=Encounter:location</code></p>
 </li>
+
+{{session}}
+
+<form action="" method="post">
+<input type="submit" name="post_enc" class="btn btn-primary btn-lg" role="button" value="Step 1: Click Here to fetch Encounter, Patient, Practitioner, and Location"></input>
+</form>
+
+{% if session.post == 'post_enc' %}
+<br>
+{{session.post_error}}
+{% if my_request %}
+<p>My Request:</p>
+<pre>
+{{my_request}}
+</pre>
+<p>Response:</p>
+<pre>
+{{my_response}}
+</pre>
+{% endif %}
+{% endif %}
+
 <li>
 <p><span>Fetch the Condition data using the following query:</span><br>
 <code>GET /Condition?patient=[patient id]&amp;encounter=[encounter id]</code></p>
 </li>
+
+<form action="" method="post">
+<input type="submit" name="post_cond" class="btn btn-primary btn-lg" role="button" value="Step 2: Click Here to fetch Condition"></input>
+</form>
+
+{% if session.post == 'post_cond' %}
+<br>
+{{session.post_error}}
+{% if my_request %}
+<p>My Request:</p>
+<pre>
+{{my_request}}
+</pre>
+<p>Response:</p>
+<pre>
+{{my_response}}
+</pre>
+{% endif %}
+{% endif %}
+
 <li>
 <p><span>Fetch the Coverage data using the following query:</span><br>
 <code>GET /Coverage?patient=[patient id]</code></p>
 </li>
+
+<form action="" method="post">
+<input type="submit" name="post_cov" class="btn btn-primary btn-lg" role="button" value="Step 3: Click Here to fetch Coverage"></input>
+</form>
+
+{% if session.post == 'post_cov' %}
+<br>
+{{session.post_error}}
+{% if my_request %}
+<p>My Request:</p>
+<pre>
+{{my_request}}
+</pre>
+<p>Response:</p>
+<pre>
+{{my_response}}
+</pre>
+{% endif %}
+{% endif %}
+
+<br/>
+
 </ol>
+
+<a href=>REFRESH</a>
 
 {% endblock %}
