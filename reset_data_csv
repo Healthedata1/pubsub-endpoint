@@ -1,0 +1,253 @@
+{
+ "metadata": {
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.7.3"
+  },
+  "orig_nbformat": 2,
+  "kernelspec": {
+   "name": "python37364bitvenv37venv2b400d68decb43d5b2206c004a019450",
+   "display_name": "Python 3.7.3 64-bit ('venv37')"
+  },
+  "metadata": {
+   "interpreter": {
+    "hash": "d959e709fb5b4c4025b7cf952bc29e800a8ec4f136018bcf0b2b2461a9a53fe8"
+   }
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2,
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 172,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "Empty DataFrame\n",
+       "Columns: [timestamp, type, status, topic, event_id]\n",
+       "Index: []"
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>timestamp</th>\n      <th>type</th>\n      <th>status</th>\n      <th>topic</th>\n      <th>event_id</th>\n    </tr>\n  </thead>\n  <tbody>\n  </tbody>\n</table>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 172
+    }
+   ],
+   "source": [
+    "data = dict(\n",
+    "    timestamp = [], #Bundle['timestamp']\n",
+    "    type = [], # Bundle['entry'][0]['resource']['parameter'][5]['valueCode']\n",
+    "    status = [], # Bundle['entry'][0]['resource']['parameter'][4]['valueCode']\n",
+    "    topic = [], # Bundle['entry'][0]['resource']['parameter'][1]['valueUri']\n",
+    "    event_id = [], # Bundle['entry'][0]['fullUri']\n",
+    "    )\n",
+    "df = pd.DataFrame(data=data)\n",
+    "df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 173,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "from fhir.resources.bundle import Bundle\n",
+    "\n",
+    "my_bundle = Bundle.parse_file('test_bundle.yaml')\n",
+    "bundle_ts = str(my_bundle.timestamp) # convert datetime object  to string"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 174,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bundle_type = my_bundle.entry[0].resource.parameter[5].valueCode"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 175,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bundle_status = my_bundle.entry[0].resource.parameter[4].valueCode"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 176,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bundle_topic = my_bundle.entry[0].resource.parameter[1].valueUri"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 177,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "bundle_event_id = my_bundle.entry[1].fullUrl"
+   ]
+  },
+  {
+   "source": [
+    "### append row of data to csv"
+   ],
+   "cell_type": "markdown",
+   "metadata": {}
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 178,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "                          timestamp                type  status  \\\n",
+       "0  2021-04-28 23:34:18.825690+00:00  event-notification  active   \n",
+       "\n",
+       "                                               topic  \\\n",
+       "0  http://argonautproject.org/encounters-ig/Subsc...   \n",
+       "\n",
+       "                                            event_id  \n",
+       "0  https://server.subscriptions.argo.run/r4/Encou...  "
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>timestamp</th>\n      <th>type</th>\n      <th>status</th>\n      <th>topic</th>\n      <th>event_id</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>2021-04-28 23:34:18.825690+00:00</td>\n      <td>event-notification</td>\n      <td>active</td>\n      <td>http://argonautproject.org/encounters-ig/Subsc...</td>\n      <td>https://server.subscriptions.argo.run/r4/Encou...</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 178
+    }
+   ],
+   "source": [
+    "my_row = pd.Series(data = [bundle_ts,bundle_type,bundle_status,bundle_topic,bundle_event_id,], index=df.columns,)\n",
+    "df = df.append(my_row, ignore_index=True)\n",
+    "df"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 179,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "stream",
+     "name": "stdout",
+     "text": [
+      "saving data.csv as csv ...\n"
+     ]
+    }
+   ],
+   "source": [
+    "file_name = 'data.csv'\n",
+    "df.to_csv(file_name)\n",
+    "print(f'saving {file_name} as csv ...')"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 180,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "                          timestamp                type  status  \\\n",
+       "0  2021-04-28 23:34:18.825690+00:00  event-notification  active   \n",
+       "\n",
+       "                                               topic  \\\n",
+       "0  http://argonautproject.org/encounters-ig/Subsc...   \n",
+       "\n",
+       "                                            event_id  \n",
+       "0  https://server.subscriptions.argo.run/r4/Encou...  "
+      ],
+      "text/html": "<div>\n<style scoped>\n    .dataframe tbody tr th:only-of-type {\n        vertical-align: middle;\n    }\n\n    .dataframe tbody tr th {\n        vertical-align: top;\n    }\n\n    .dataframe thead th {\n        text-align: right;\n    }\n</style>\n<table border=\"1\" class=\"dataframe\">\n  <thead>\n    <tr style=\"text-align: right;\">\n      <th></th>\n      <th>timestamp</th>\n      <th>type</th>\n      <th>status</th>\n      <th>topic</th>\n      <th>event_id</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr>\n      <th>0</th>\n      <td>2021-04-28 23:34:18.825690+00:00</td>\n      <td>event-notification</td>\n      <td>active</td>\n      <td>http://argonautproject.org/encounters-ig/Subsc...</td>\n      <td>https://server.subscriptions.argo.run/r4/Encou...</td>\n    </tr>\n  </tbody>\n</table>\n</div>"
+     },
+     "metadata": {},
+     "execution_count": 180
+    }
+   ],
+   "source": [
+    "my_csv = pd.read_csv(file_name, index_col = 0)\n",
+    "my_csv"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 181,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "(1, 5)"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 181
+    }
+   ],
+   "source": [
+    "my_csv.shape"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 167,
+   "metadata": {},
+   "outputs": [
+    {
+     "output_type": "execute_result",
+     "data": {
+      "text/plain": [
+       "[{'name': 'timestamp', 'id': 'timestamp'},\n",
+       " {'name': 'type', 'id': 'type'},\n",
+       " {'name': 'status', 'id': 'status'},\n",
+       " {'name': 'topic', 'id': 'topic'},\n",
+       " {'name': 'event_id', 'id': 'event_id'}]"
+      ]
+     },
+     "metadata": {},
+     "execution_count": 167
+    }
+   ],
+   "source": [
+    "columns = [ {'name' : i , 'id': i} for i in my_csv.columns]\n",
+    "columns"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ]
+}

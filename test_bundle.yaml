@@ -1,0 +1,22 @@
+resourceType: Bundle
+type: history
+timestamp: 2021-04-28T23:34:18.8256904+00:00
+entry:
+  - fullUrl: https://server.subscriptions.argo.run/r4/Parameters/
+    resource:
+      resourceType: Parameters
+      parameter:
+        - name: subscription
+          valueReference:
+            reference: https://server.subscriptions.argo.run/r4/Subscription/f355d8fa-71e5-4b90-8457-171d76e23166
+        - name: topic
+          valueUri: http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start
+        - name: events-since-subscription-start
+          valueUnsignedInt: 1
+        - name: events-in-notification
+          valueUnsignedInt: 1
+        - name: status
+          valueCode: active
+        - name: type
+          valueCode: event-notification
+  - fullUrl: https://server.subscriptions.argo.run/r4/Encounter/2073884

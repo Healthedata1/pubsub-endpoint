@@ -4,17 +4,12 @@
 
   <p>my subscription notifications ( hit refresh to update )</p>
   <a href=>REFRESH</a>
-  <ol>
-    {% for i in posts %}
 
-            <ul>{{ i.id }}) timestamp = {{ i.timestamp }}, notification = {{ i.type }}
-               {% if i.type == 'event-notification'%}
-                event ids = {{ i.event_ids }}
-               {% endif %}
-             </ul>
-
-    {% endfor %}
-  </ol>
+{% for table in tables %}
+{{titles[loop.index]}}
+{{ table|safe }}
+{% endfor %}
+ 
 
 <hr />
 
@@ -72,7 +67,7 @@
 <code>GET /Encounter/_id=[id]&amp;_include=Encounter:patient&amp;_include=Encounter:practitioner&amp;_include=Encounter:location</code></p>
 </li>
 
-{{session}}
+<!-- {{session}}
 
 <form action="" method="post">
 <input type="submit" name="post_enc" class="btn btn-primary btn-lg" role="button" value="Step 1: Click Here to fetch Encounter, Patient, Practitioner, and Location"></input>
@@ -91,14 +86,14 @@
 {{my_response}}
 </pre>
 {% endif %}
-{% endif %}
+{% endif %} -->
 
 <li>
 <p><span>Fetch the Condition data using the following query:</span><br>
 <code>GET /Condition?patient=[patient id]&amp;encounter=[encounter id]</code></p>
 </li>
 
-<form action="" method="post">
+<!-- <form action="" method="post">
 <input type="submit" name="post_cond" class="btn btn-primary btn-lg" role="button" value="Step 2: Click Here to fetch Condition"></input>
 </form>
 
@@ -115,14 +110,14 @@
 {{my_response}}
 </pre>
 {% endif %}
-{% endif %}
+{% endif %} -->
 
 <li>
 <p><span>Fetch the Coverage data using the following query:</span><br>
 <code>GET /Coverage?patient=[patient id]</code></p>
 </li>
 
-<form action="" method="post">
+<!-- <form action="" method="post">
 <input type="submit" name="post_cov" class="btn btn-primary btn-lg" role="button" value="Step 3: Click Here to fetch Coverage"></input>
 </form>
 
@@ -141,7 +136,7 @@
 {% endif %}
 {% endif %}
 
-<br/>
+<br/> -->
 
 </ol>
 
