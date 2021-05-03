@@ -1,7 +1,7 @@
 # A very simple Flask app to get started with using 
 # FHIR Subscriptions
-# This is a reciever for the FHIR R4 Server URL (https://server.subscriptions.argo.run/r4)
-# with an ednpoint = 
+# This is a reciever for the FHIR R4 Server URL (https://subscriptions.argo.run/)
+# with an ednpoint = "http://healthedatainc2.pythonanywhere.com/webhook"
 # It just saves the subscription notification data to a flat csv file "data.csv"
 #  to initialize the data.csv:
 #
