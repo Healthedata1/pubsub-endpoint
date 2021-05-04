@@ -1,4 +1,4 @@
-# A very simple Flask app to get started with using 
+# A very simple Flask app to get started with using
 # FHIR Subscriptions
 # This is a reciever for the FHIR R4 Server URL (https://subscriptions.argo.run/)
 # with an ednpoint = "http://healthedatainc2.pythonanywhere.com/webhook"
@@ -7,7 +7,7 @@
 #
 # data = dict(
 #     timestamp = [], #Bundle['timestamp']
-#     type = [], # Bundle['entry'][0]['resource']['parameter'][5]['valueCode']
+#     foo = [], # Bundle['entry'][0]['resource']['parameter'][5]['valueCode']
 #     status = [], # Bundle['entry'][0]['resource']['parameter'][4]['valueCode']
 #     topic = [], # Bundle['entry'][0]['resource']['parameter'][1]['valueUri']
 #     event_id = [], # Bundle['entry'][0]['fullUri']
@@ -33,6 +33,7 @@ from json import dumps, loads
 import pandas as pd
 
 logging.basicConfig(
+filename='demo.log',
 level=logging.DEBUG,
 format='[%(asctime)s] %(levelname)s in %(module)s %(lineno)d}: %(message)s')
 
@@ -42,11 +43,20 @@ app.secret_key = 'my_secret_key'
 
 file_name = 'data.csv'
 
+empty_table = dict(
+     timestamp = [], #Bundle['timestamp']
+     type = [], # Bundle['entry'][0]['resource']['parameter'][5]['valueCode']
+     status = [], # Bundle['entry'][0]['resource']['parameter'][4]['valueCode']
+     topic = [], # Bundle['entry'][0]['resource']['parameter'][1]['valueUri']
+     event_id = [], # Bundle['entry'][0]['fullUri']
+     )
+
 #see add_url_rule to conditionally open rest hook.= e.g after subscribing"
 
 @app.route('/webhook', methods=['POST'])
 def respond():
     # webhook logic to do something
+    app.logger.info(request.headers)
     app.logger.info(request.json)
     try:
         bundle_ts = request.json['timestamp']
@@ -56,26 +66,33 @@ def respond():
         bundle_topic = sub_params[1]['valueUri']
         bundle_event_id = request.json['entry'][1]['fullUrl']
     except Exception as e: # work on python 3.x
-        app.logger.exception(e)
+        #app.logger.exception(e)
         return Response(status=400)
     else:
-        df = pd.read_csv(file_name, index_col = 0) 
+        df = pd.read_csv(file_name, index_col = 0)
         my_row = pd.Series(
         data = [bundle_ts,bundle_type,bundle_status,bundle_topic,bundle_event_id,],
         index=df.columns,
         )
-        app.logger.info(f'{df.shape[0]} rows')       
+        #app.logger.info(f'{df.shape[0]} rows')
         df = df.append(my_row, ignore_index=True)
         df.to_csv(file_name)
-        app.logger.info(f'saving {file_name} as csv ...')
+        #app.logger.info(f'saving {file_name} as csv ...')
         return Response(status=200)
 
-@app.route('/')
+@app.route('/',methods = ['POST', 'GET'])
 def html_table():
+    #app.logger.info(f"request.method = {request.method}")
+    if "clear_button" in request.form:
+        #app.logger.info("clear table")
+        df = pd.DataFrame(data=empty_table)
+        df.to_csv(file_name)
     df = pd.read_csv(file_name, index_col = 0)
+    #app.logger.info("update table")
     return render_template('index.html',
      tables=[df.to_html(classes='data')],
       titles = df.columns.values,)
+
 
 if __name__ == '__main__':
     app.run(debug=True)
