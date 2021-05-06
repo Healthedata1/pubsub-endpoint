@@ -58,13 +58,20 @@ def respond():
     # webhook logic to do something
     app.logger.info(request.headers)
     app.logger.info(request.json)
-    try:
-        bundle_ts = request.json['timestamp']
-        sub_params = request.json['entry'][0]['resource']['parameter']
-        bundle_type = sub_params[5]['valueCode']
-        bundle_status = sub_params[4]['valueCode']
-        bundle_topic = sub_params[1]['valueUri']
+    try: # sometimes is empty
         bundle_event_id = request.json['entry'][1]['fullUrl']
+    except IndexError: # if no entry that is OK
+        #app.logger.exception(e)
+        bundle_event_id = None
+    except KeyError: # if no fullUrl that is no good
+        #app.logger.exception(e)
+        return Response(status=400)
+    try: # if these are empty then fail
+        bundle_ts = request.json['timestamp']
+        params = request.json['entry'][0]['resource']['parameter']
+        bundle_type = [param['valueCode'] for param in params if param['name']=='type'][0]
+        bundle_status = [param['valueCode'] for param in params if param['name']=='status'][0]
+        bundle_topic = [param['valueUri'] for param in params if param['name']=='topic'][0]
     except Exception as e: # work on python 3.x
         #app.logger.exception(e)
         return Response(status=400)
@@ -87,12 +94,11 @@ def html_table():
         #app.logger.info("clear table")
         df = pd.DataFrame(data=empty_table)
         df.to_csv(file_name)
-    df = pd.read_csv(file_name, index_col = 0)
+    df = pd.read_csv(file_name, index_col = 0, keep_default_na=False )
     #app.logger.info("update table")
     return render_template('index.html',
      tables=[df.to_html(classes='data')],
       titles = df.columns.values,)
-
 
 if __name__ == '__main__':
     app.run(debug=True)

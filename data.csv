@@ -1,1 +1,12 @@
 ,timestamp,type,status,topic,event_id
+0,2021-05-06T03:00:06.578Z,heartbeat,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+1,2021-05-06T03:00:18.283Z,heartbeat,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+2,2021-05-06T03:00:30.125Z,heartbeat,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+3,2021-05-06T03:01:03.741Z,heartbeat,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+4,2021-05-06T03:01:04.811Z,heartbeat,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+5,2021-05-06T03:01:05.732Z,heartbeat,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+6,2021-05-06T03:05:59.070Z,handshake,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+7,2021-05-06T03:05:59.985Z,handshake,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+8,2021-05-06T03:06:01.010Z,handshake,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,
+9,2021-05-06T03:06:05.378Z,event-notification,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,https://server.subscriptions.argo.run/r4/Encounter/2073884
+10,2021-05-06T03:06:05.907Z,event-notification,active,http://argonautproject.org/encounters-ig/SubscriptionTopic/encounter-start,https://server.subscriptions.argo.run/r4/Encounter/2073884
